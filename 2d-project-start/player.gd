@@ -3,34 +3,69 @@ extends CharacterBody2D
 signal health_depleted
 
 const DAMAGE_RATE = 15.0
-const MOVEMENT_DISTANCE = 600
+const ENERGY_CONSUMPTION_RATE = 5.0
+const ENERGY_RECOVERY_RATE = 5.0
+const MOVEMENT_DISTANCE = 1000
+const MAX_ENERGY = 100.0
 
-var health = 100.0
 var overlapping_mobs
+var health = 100.0
+var energy = MAX_ENERGY
+var shouldRecoverEnergy = false
 
 # Hooks
 func _physics_process(delta):
-	# * We have access to Input in all scripts we create
-	# * It's a classed provided by godot with several helpers to interact with user input
-	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = direction * MOVEMENT_DISTANCE # Move in input direction at MOVEMENT_DISTANCE by second
-	move_and_slide()
-	animateBaseOnvelocity(velocity)
+	if isReadyToMove():
+		if hasEnergy():
+			shouldRecoverEnergy = false
+			move_and_slide()
+			consumeEnergy(delta)
+	else:
+		shouldRecoverEnergy = true
 
 	if hasOverlappingMobs():
 		make_damage(delta)
 
+	animateBaseOnVelocity()
+	updateEnergyBar()
+
+# Signal Handlers
+
+func _on_energy_recovery_timer_timeout():
+	if (isTired() || isExausted()) && shouldRecoverEnergy:
+		energy += ENERGY_CONSUMPTION_RATE
+		
+		if energy > MAX_ENERGY:
+			energy = MAX_ENERGY
+	
 # Private
 
-func animateBaseOnvelocity(velocity):
+func isReadyToMove():
+	calculateVelocity()
+
+	return velocity.length() > 0.0
+
+func calculateVelocity():
+	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	velocity = (direction * MOVEMENT_DISTANCE) * (energy / 100.0)
+
+func hasEnergy():
+	return energy > 0.0
+
+func animateBaseOnVelocity():
 	if velocity.length() > 0.0:
-		# $HappyBoo is the same as get_node("HappyBoo")
-		# The name in get_node needs to respect the folder structure unless node is marked as "Access as unique name"
-		# "Access as unique node" has memory implications given godot will find it and save it for easy access in the future. It's good for nodes accessed many times.
-		# To get a node marked as unique node, instead of $ we use %
 		$HappyBoo.play_walk_animation()
 	else:
 		$HappyBoo.play_idle_animation()
+
+func consumeEnergy(delta):
+	energy -= ENERGY_CONSUMPTION_RATE * delta
+
+	if energy < 0:
+		energy = 0
+
+func updateEnergyBar():
+	%EnergyBar.value = energy
 
 func hasOverlappingMobs():
 	overlapping_mobs = %HurtBox.get_overlapping_bodies()
@@ -49,3 +84,9 @@ func updateHealthBar():
 
 func isHealthDepleted():
 	return health <= 0.0
+
+func isTired():
+	return !isExausted() && energy < MAX_ENERGY
+
+func isExausted():
+	return energy == 0

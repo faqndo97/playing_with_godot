@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://di0f30a67ab76"]
+[gd_scene load_steps=10 format=3 uid="uid://di0f30a67ab76"]
 
 [ext_resource type="PackedScene" uid="uid://pbmyh1qru7p" path="res://characters/happy_boo/happy_boo.tscn" id="1_mokbp"]
 [ext_resource type="Script" path="res://player.gd" id="1_v7byk"]
@@ -19,6 +19,20 @@ corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q7tid"]
 bg_color = Color(0.388235, 0.8, 0.372549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sftni"]
+bg_color = Color(0.211765, 0.231373, 0.254902, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7ndc"]
+bg_color = Color(1, 0.835294, 0, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -50,10 +64,28 @@ debug_color = Color(0.828602, 0.331566, 0.559356, 0.42)
 [node name="HealthBar" type="ProgressBar" parent="."]
 unique_name_in_owner = true
 offset_left = -88.0
-offset_top = -119.0
+offset_top = -140.0
 offset_right = 88.0
-offset_bottom = -101.0
+offset_bottom = -122.0
 theme_override_styles/background = SubResource("StyleBoxFlat_c3heo")
 theme_override_styles/fill = SubResource("StyleBoxFlat_q7tid")
 value = 100.0
 show_percentage = false
+
+[node name="EnergyBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+offset_left = -88.0
+offset_top = -117.0
+offset_right = 88.0
+offset_bottom = -99.0
+theme_override_styles/background = SubResource("StyleBoxFlat_sftni")
+theme_override_styles/fill = SubResource("StyleBoxFlat_y7ndc")
+value = 100.0
+show_percentage = false
+
+[node name="EnergyRecoveryTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.333
+autostart = true
+
+[connection signal="timeout" from="EnergyRecoveryTimer" to="." method="_on_energy_recovery_timer_timeout"]
