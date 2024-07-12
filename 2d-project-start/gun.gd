@@ -1,6 +1,10 @@
 extends Area2D
 
+# This is what happen when we drag an drop the scene as a child of the marker, but we're doing manually in the code to trigger as many bullets as we want
+const Bullet = preload("res://bullet.tscn")
 var enemies_in_range
+
+# Hooks
 
 func _ready():
 	set_process_input(true)
@@ -10,18 +14,25 @@ func _input(ev):
 		shoot()
 
 func _physics_process(delta):
-	enemies_in_range = get_overlapping_bodies()
-	
-	if enemies_in_range.size() > 0:
-		var target_enemy = enemies_in_range[0]
-		look_at(target_enemy.global_position)
-		
+	if hasEnemiesInRange():
+		look_at(closestEnemy().global_position)
+
+# Private
 
 func shoot():
-	# This is what happen when we drag an drop the scene as a child of the marker, but we're doing manually in the code to trigger as many bullets as we want
-	const Bullet = preload("res://bullet.tscn")
-	var new_bullet = Bullet.instantiate()
-	new_bullet.global_position = %ShootingPoint.global_position
-	new_bullet.rotation = %ShootingPoint.global_rotation
+	%ShootingPoint.add_child(create_bullet())
+
+func create_bullet():
+	var bullet = Bullet.instantiate()
+	bullet.global_position = %ShootingPoint.global_position
+	bullet.rotation = %ShootingPoint.global_rotation
 	
-	%ShootingPoint.add_child(new_bullet)
+	return bullet
+
+func hasEnemiesInRange():
+	enemies_in_range = get_overlapping_bodies()
+
+	return enemies_in_range.size() > 0
+
+func closestEnemy():
+	return enemies_in_range[0]
