@@ -1,0 +1,12 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1720839634
+Green.png::CompressedTexture2D::6721004835961430528::1720838366::1720838366::1::::<><>::
+icon.svg::CompressedTexture2D::8190917067384575398::1720838206::1720838211::1::::<><>::
+main.tscn::PackedScene::960085704782347666::1720839634::0::1::::<><>::uid://c20x75wmudcxs::::res://Green.png<>uid://d3jo76iccnkbk::::res://Terrain (16x16).png<>uid://cr3m5sn328gd8::::res://characters/ninja_frog.tscn
+Terrain (16x16).png::CompressedTexture2D::9144037896710790940::1720838444::1720838444::1::::<><>::
+::res://characters/::1720839859
+Idle (32x32).png::CompressedTexture2D::7377438732368193583::1720839717::1720839717::1::::<><>::
+Jump (32x32).png::CompressedTexture2D::6239969778556369464::1720839221::1720839437::1::::<><>::
+ninja_frog.tscn::PackedScene::6024637430889107863::1720839634::0::1::::<><>::uid://cu5xnjrotasq7::::res://characters/Jump (32x32).png<>res://characters/ninja_frog.gd
+ninja_frog.gd::GDScript::-1::1720839487::0::1::::<>CharacterBody2D<>::
+Run (32x32).png::CompressedTexture2D::8099173580618722971::1720839859::1720839859::1::::<><>::
